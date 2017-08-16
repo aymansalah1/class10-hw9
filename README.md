@@ -25,7 +25,7 @@ The following API end points may be of interest:
 
 - `http://class10.taalmap.nl/en?subject=<subject>`
 
-    where subject is one of following:
+    where `<subject>` is one of following:
 
     - questions
     - answers
