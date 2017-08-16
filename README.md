@@ -1,14 +1,18 @@
-# hyf-class10
+# class10-hw9
 
 This application displays a list of bilingual sentences (currently English -> Dutch) that match criteria as specified through an API end point.
 
 ## Installation
 
-Install the repo (replace <project folder> with the name of the folder where you keep of your HYF work. In this folder a class10-hw9 subfolder will be created by the git clone command below):
+1. Fork the following repository from GitHub to your own GitHub account:
+
+    https://github.com/remarcmij/class10-hw9
+
+2. Clone the forked repo (replace <project folder> with the name of the folder where you keep of your HYF work. In this folder a class10-hw9 subfolder will be created by the git clone command below):
 
 ```
 cd <project folder>
-git clone https://github.com/remarcmij/class10-hw9.git
+git clone https://github.com/<your-github-account>/class10-hw9.git
 ```
 
 Open File Explorer (Windows) or equivalent on Mac or Linux and go to the `class10-hw9` folder.
