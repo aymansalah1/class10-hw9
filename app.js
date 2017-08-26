@@ -4,47 +4,52 @@
   let url = `${apiEndPoint}?subject=${subject}`
 
   const searchBtn = document.getElementById("searchBtn");
-  searchBtn.addEventListener("click" , onClickSearch);
-  let cashQueries= {}
-  const fetchJSON = url => fetch(url).then(res => res.json())
-  
-  function renderSentence(ul, sentence) {
-    const li = document.createElement('li')
-    li.innerHTML = '<span class="phrase">' +
-      sentence.phrase +
-      '</span><br /><span class="translation">' +
-      sentence.translation
-      + '</span'
-    ul.appendChild(li)
+  const contentUL = document.getElementById('content')
+  searchBtn.addEventListener("click", onClickSearch);
+
+  const fetchJSON = (() => {
+    const cache = {}
+    return url => {
+      const cached = cache[url]
+      if (cached) {
+        console.log(`cache hit for ${url}`)
+        return Promise.resolve(cached)
+      }
+      return fetch(url).then(res => {
+        const data = res.json()
+        cache[url] = data
+        return data
+      })
+    }
+  })();
+
+  const fetchURL = url => {
+    fetchJSON(url)
+      .then(res => getHTMLContent(subject, res))
+      .then(html => contentUL.innerHTML = html)
+      .catch(err => getHTMLContent(err.message, []));
   }
-  /*function renderSentence(htmlElementID,html){
-    let htmlElement = document.getElementById(htmlElementID);
-    htmlElement.innerHTML=html;
-  }*/
-  function render(query, sentences) {
-    cashQueries[query]=sentences;
+
+  function getHTMLContent(query, sentences) {
     const h1 = document.getElementById('query')
     h1.innerHTML = query
-    const ul = document.getElementById('content')
-    if(!sentences.length>0){
-       ul.innerHTML="No Result Found";
-       return;
-    }
-    ul.innerHTML=" ";
-    sentences.reduce((prev, current) => {
-      renderSentence(ul, current)
-    });
+    if (!sentences.length > 0)
+      return "<li>No Result Found</li>";
+    contentUL.innerHTML = " ";
+    return sentences.reduce((prev, current) => {
+      return `${prev}<li><span class="phrase">${current.phrase}
+      </span><br /><span class="translation">${current.translation}</span></li>`
+    }, '');
   }
   function onClickSearch() {
     const searchInput = document.getElementById("userInput");
-    const contentList = document.getElementById("content");
-    var userInput = searchInput.value;
-    subject=userInput;
+    let userInput = searchInput.value;
+    subject = userInput;
     url = `${apiEndPoint}?subject=${subject}`
-    cashQueries[subject]?
-    render(subject,cashQueries[subject]):
-    fetchJSON(url).then(res =>render(subject, res));
+    fetchURL(url);
   }
-  fetchJSON(url).then(res =>render(subject, res)).catch(exception=>render(exception.value,[]));
 
+  fetchURL(url);
 })()
+
+
